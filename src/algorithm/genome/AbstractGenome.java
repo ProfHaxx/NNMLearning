@@ -24,17 +24,9 @@ public abstract class AbstractGenome {
         this.OutputNodes = OutputNodes;
     }
 
-    public abstract double count(int NodeID);
+    public abstract void count();
 
     public abstract Genome copy();
-
-    public void addConnection(Connection newConnection){
-        connections.add(newConnection);
-    }
-
-    public void addHiddenNode(Node newNode){
-        HiddenNodes.add(newNode);
-    }
 
     public List<Connection> getConnections() {
         return connections;
