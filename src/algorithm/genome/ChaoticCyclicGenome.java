@@ -26,28 +26,6 @@ public class ChaoticCyclicGenome extends AbstractGenome {
         super.getConnections().addAll(Arrays.asList(newConnections));
     }
 
-    //get functions
-
-    @Override
-    public List<Connection> getConnections() {
-        return super.getConnections();
-    }
-
-    @Override
-    public Node[] getInputNodes() {
-        return super.getInputNodes();
-    }
-
-    @Override
-    public List<Node> getHiddenNodes() {
-        return super.getHiddenNodes();
-    }
-
-    @Override
-    public Node[] getOutputNodes() {
-        return super.getOutputNodes();
-    }
-
     //count function is used to find out the number this Genome produces at certain point of time
 
     @Override
