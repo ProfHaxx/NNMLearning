@@ -2,6 +2,7 @@ package algorithm.genome;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public abstract class AbstractGenome {
@@ -24,17 +25,18 @@ public abstract class AbstractGenome {
         this.OutputNodes = OutputNodes;
     }
 
-    public abstract double count(int NodeID);
+    public abstract double count();
 
     public abstract Genome copy();
-
-    public void addConnection(Connection newConnection){
-        connections.add(newConnection);
+    /*
+    public void addConnection(Connection... newConnections){
+        connections.addAll(Arrays.asList(newConnections));
     }
 
-    public void addHiddenNode(Node newNode){
-        HiddenNodes.add(newNode);
+    public void addHiddenNode(Node... newNodes){
+        HiddenNodes.addAll(Arrays.asList(newNodes));
     }
+    */
 
     public List<Connection> getConnections() {
         return connections;
