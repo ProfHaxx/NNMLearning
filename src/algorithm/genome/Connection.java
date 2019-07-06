@@ -34,4 +34,6 @@ public class Connection{
     public String toString() {
         return "InputNodeID: " + InputNodeID + "  OutputNodeID: " + OutputNodeID + "  Weight: " + weight;
     }
+
+
 }

@@ -6,6 +6,8 @@ import java.util.Random;
 
 public class ChaoticCyclicGenome extends AbstractGenome {
 
+    public static final ConnectionComparator connectionComparator = new ConnectionComparator();
+
     //both constructors
     //the second one may be not used at all and only will be useful in recreating the save Genome
 
@@ -44,13 +46,55 @@ public class ChaoticCyclicGenome extends AbstractGenome {
     }
 
     /*
-    Connection mutation:
-        One node ID is being chosen from input node IDs or hidden node IDs
-        The second node ID is being chosen from output node IDs or hidden node IDs
+    * Connection mutation:
+    *     One node ID is being chosen from input node IDs or hidden node IDs
+    *     The second node ID is being chosen from output node IDs or hidden node IDs
     */
 
     public void addConnectionMutation(Random r){
+        List<Node> inputNodes = super.getHiddenNodes();
+        inputNodes.addAll(Arrays.asList(super.getInputNodes()));
+        List<Node> outputNodes = super.getHiddenNodes();
+        outputNodes.addAll(Arrays.asList(super.getOutputNodes()));
+        int inputNodeID = inputNodes.get(r.nextInt(inputNodes.size())).getID();
+        int outputNodeID = outputNodes.get(r.nextInt(outputNodes.size())).getID();
+        Connection newConnection = new Connection(1.0, inputNodeID, outputNodeID);
+        boolean changed = false;
+        for(Connection connection: super.getConnections()){
+            if(connectionComparator.compare(connection, newConnection) == 0){
+                changed = true;
+                break;
+            }
+        }
+        if(!changed){
+            addConnections(newConnection);
+        }
+    }
 
+    /**
+     * @param mutationChance: chance that selected Connection would mutate, it has to be smaller than 1 and bigger than 0
+     * @param mutationRatio: Number that sets the scale of the change
+     */
+
+    public void ConnectionWeightMutation(double mutationChance, double mutationRatio, Random r){
+        for(Connection connection: super.getConnections()){
+            if(mutationChance < r.nextDouble()){
+                connection.setWeight((r.nextDouble() * 2f - 1f) * mutationRatio + connection.getWeight());
+            }
+        }
+    }
+
+    /**
+     * @param mutationChance: chance that selected Node would mutate, it has to be smaller than 1 and bigger than 0
+     * @param mutationRatio: Number that sets the scale of the change
+     */
+
+    public void NodeValueMutation(double mutationChance, double mutationRatio, Random r){
+        for(Node node: super.getHiddenNodes()){
+            if(mutationChance < r.nextDouble()){
+                node.setValue((r.nextDouble() * 2f - 1f) * mutationRatio + node.getValue());
+            }
+        }
     }
 
     //count function is used to find out the number this Genome produces at certain point of time
