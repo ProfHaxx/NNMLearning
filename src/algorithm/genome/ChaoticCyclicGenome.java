@@ -1,28 +1,31 @@
 package algorithm.genome;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class ChaoticCyclicGenome extends AbstractGenome {
 
     public static final ConnectionComparator connectionComparator = new ConnectionComparator();
+    //helperMap is used in order to save the next step values
+    public Map<Integer, Double> helperMap = new HashMap<>();
 
     //both constructors
     //the second one may be not used at all and only will be useful in recreating the save Genome
 
-    public ChaoticCyclicGenome(Node[] InputNodes, Node[] OutputNodes){
+    public ChaoticCyclicGenome(Map<Integer, Node>  InputNodes, Map<Integer, Node>  OutputNodes){
         super(InputNodes, OutputNodes);
     }
 
-    public ChaoticCyclicGenome(List<Node> HiddenNodes, List<Connection> connections, Node[] InputNodes, Node[] OutputNodes){
+    public ChaoticCyclicGenome(Map<Integer, Node> HiddenNodes, List<Connection> connections, Map<Integer, Node>  InputNodes, Map<Integer, Node>  OutputNodes){
         super(HiddenNodes, connections, InputNodes, OutputNodes);
     }
 
     //private add functions in order to change Genome structure during it's mutations
 
     private void addHiddenNodes(Node... newHiddenNodes){
-        super.getHiddenNodes().addAll(Arrays.asList(newHiddenNodes));
+        int Offset = super.getInputNodes().size() + super.getOutputNodes().size();
+        for(Node node: newHiddenNodes){
+            super.getHiddenNodes().put(Offset + getHiddenNodes().size(), node);
+        }
     }
 
     private void addConnections(Connection... newConnections){
@@ -38,9 +41,9 @@ public class ChaoticCyclicGenome extends AbstractGenome {
     public void addNodeMutation(Random r){
         int connectionID = r.nextInt(super.getConnections().size());
         Connection c = super.getConnections().get(connectionID);
-        int newNodeID = super.getHiddenNodes().size() + super.getInputNodes().length + super.getOutputNodes().length;
+        int newNodeID = super.getHiddenNodes().size() + super.getInputNodes().size() + super.getOutputNodes().size();
         super.getConnections().remove(connectionID);
-        super.getHiddenNodes().add(new Node(0, newNodeID, NodeType.HIDDEN));
+        addHiddenNodes(new Node(0, NodeType.HIDDEN, 0));
         super.getConnections().add(new Connection(1.0, c.getInputNodeID(), newNodeID));
         super.getConnections().add(new Connection(c.getWeight(),newNodeID,c.getOutputNodeID()));
     }
@@ -52,13 +55,13 @@ public class ChaoticCyclicGenome extends AbstractGenome {
     */
 
     public void addConnectionMutation(Random r){
-        List<Node> inputNodes = super.getHiddenNodes();
-        inputNodes.addAll(Arrays.asList(super.getInputNodes()));
-        List<Node> outputNodes = super.getHiddenNodes();
-        outputNodes.addAll(Arrays.asList(super.getOutputNodes()));
-        int inputNodeID = inputNodes.get(r.nextInt(inputNodes.size())).getID();
-        int outputNodeID = outputNodes.get(r.nextInt(outputNodes.size())).getID();
-        Connection newConnection = new Connection(1.0, inputNodeID, outputNodeID);
+        Set<Integer> inputNodeIDs = super.getHiddenNodes().keySet();
+        Set<Integer> outputNodeIDs = super.getHiddenNodes().keySet();
+        inputNodeIDs.addAll(super.getInputNodes().keySet());
+        outputNodeIDs.addAll(super.getOutputNodes().keySet());
+        Integer[] inputNodeID = inputNodeIDs.toArray(new Integer[inputNodeIDs.size()]);
+        Integer[] outputNodeID = inputNodeIDs.toArray(new Integer[inputNodeIDs.size()]);
+        Connection newConnection = new Connection(1.0, inputNodeID[r.nextInt(inputNodeID.length)], outputNodeID[r.nextInt(outputNodeID.length)]);
         boolean changed = false;
         for(Connection connection: super.getConnections()){
             if(connectionComparator.compare(connection, newConnection) == 0){
@@ -90,9 +93,9 @@ public class ChaoticCyclicGenome extends AbstractGenome {
      */
 
     public void NodeValueMutation(double mutationChance, double mutationRatio, Random r){
-        for(Node node: super.getHiddenNodes()){
+        for(Node node: super.getHiddenNodes().values()){
             if(mutationChance < r.nextDouble()){
-                node.setValue((r.nextDouble() * 2f - 1f) * mutationRatio + node.getValue());
+                node.setQ((r.nextDouble() * 2f - 1f) * mutationRatio + node.getQ());
             }
         }
     }
@@ -101,12 +104,14 @@ public class ChaoticCyclicGenome extends AbstractGenome {
 
     @Override
     public void count() {
+        for(Connection connection: super.getConnections()){
 
+        }
     }
 
     @Override
-    public Genome copy() {
-        return null;
+    public AbstractGenome copy() {
+        return new ChaoticCyclicGenome(super.getHiddenNodes(), super.getConnections(), super.getInputNodes(), super.getOutputNodes());
     }
 
 }
