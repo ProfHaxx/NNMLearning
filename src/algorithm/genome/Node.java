@@ -1,6 +1,6 @@
 package algorithm.genome;
 
-public class Node {
+public class Node{
     private double value;
     private int ID;
     private NodeType type;
