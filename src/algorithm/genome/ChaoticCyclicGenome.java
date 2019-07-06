@@ -11,20 +11,19 @@ public class ChaoticCyclicGenome extends AbstractGenome {
     //both constructors
     //the second one may be not used at all and only will be useful in recreating the save Genome
 
-    public ChaoticCyclicGenome(Map<Integer, Node>  InputNodes, Map<Integer, Node>  OutputNodes){
-        super(InputNodes, OutputNodes);
+    public ChaoticCyclicGenome(Map<Integer, Node>  Nodes){
+        super(Nodes);
     }
 
-    public ChaoticCyclicGenome(Map<Integer, Node> HiddenNodes, List<Connection> connections, Map<Integer, Node>  InputNodes, Map<Integer, Node>  OutputNodes){
-        super(HiddenNodes, connections, InputNodes, OutputNodes);
+    public ChaoticCyclicGenome(Map<Integer, Node> Nodes, List<Connection> connections){
+        super(Nodes, connections);
     }
 
     //private add functions in order to change Genome structure during it's mutations
 
     private void addHiddenNodes(Node... newHiddenNodes){
-        int Offset = super.getInputNodes().size() + super.getOutputNodes().size();
         for(Node node: newHiddenNodes){
-            super.getHiddenNodes().put(Offset + getHiddenNodes().size(), node);
+            super.getNodes().put(super.getNodes().size(), node);
         }
     }
 
@@ -41,7 +40,7 @@ public class ChaoticCyclicGenome extends AbstractGenome {
     public void addNodeMutation(Random r){
         int connectionID = r.nextInt(super.getConnections().size());
         Connection c = super.getConnections().get(connectionID);
-        int newNodeID = super.getHiddenNodes().size() + super.getInputNodes().size() + super.getOutputNodes().size();
+        int newNodeID = super.getNodes().size();
         super.getConnections().remove(connectionID);
         addHiddenNodes(new Node(0, NodeType.HIDDEN, 0));
         super.getConnections().add(new Connection(1.0, c.getInputNodeID(), newNodeID));
@@ -54,14 +53,41 @@ public class ChaoticCyclicGenome extends AbstractGenome {
     *     The second node ID is being chosen from output node IDs or hidden node IDs
     */
 
+    private static final double selectionChance = 0.1;
+
     public void addConnectionMutation(Random r){
-        Set<Integer> inputNodeIDs = super.getHiddenNodes().keySet();
-        Set<Integer> outputNodeIDs = super.getHiddenNodes().keySet();
-        inputNodeIDs.addAll(super.getInputNodes().keySet());
-        outputNodeIDs.addAll(super.getOutputNodes().keySet());
-        Integer[] inputNodeID = inputNodeIDs.toArray(new Integer[inputNodeIDs.size()]);
-        Integer[] outputNodeID = inputNodeIDs.toArray(new Integer[inputNodeIDs.size()]);
-        Connection newConnection = new Connection(1.0, inputNodeID[r.nextInt(inputNodeID.length)], outputNodeID[r.nextInt(outputNodeID.length)]);
+        Integer inputNodeID = null, outputNodeID = null;
+        for(Integer i: super.getNodes().keySet()){
+            switch (super.getNodes().get(i).getType()){
+                case INPUT:
+                    if(inputNodeID == null){
+                        inputNodeID = i;
+                    }else if(r.nextDouble() < selectionChance){
+                        inputNodeID = 1;
+                    }
+                    break;
+                case OUTPUT:
+                    if(outputNodeID == null){
+                        outputNodeID = i;
+                    }else if(r.nextDouble() < selectionChance){
+                        outputNodeID = 1;
+                    }
+                    break;
+                case HIDDEN:
+                    if(outputNodeID == null){
+                        outputNodeID = i;
+                    }else if(r.nextDouble() < selectionChance){
+                        outputNodeID = 1;
+                    }
+                    if(inputNodeID == null){
+                        inputNodeID = i;
+                    }else if(r.nextDouble() < selectionChance){
+                        inputNodeID = 1;
+                    }
+                    break;
+            }
+        }
+        Connection newConnection = new Connection(1.0, inputNodeID, outputNodeID);
         boolean changed = false;
         for(Connection connection: super.getConnections()){
             if(connectionComparator.compare(connection, newConnection) == 0){
@@ -92,8 +118,8 @@ public class ChaoticCyclicGenome extends AbstractGenome {
      * @param mutationRatio: Number that sets the scale of the change
      */
 
-    public void NodeValueMutation(double mutationChance, double mutationRatio, Random r){
-        for(Node node: super.getHiddenNodes().values()){
+    public void NodeQMutation(double mutationChance, double mutationRatio, Random r){
+        for(Node node: super.getNodes().values()){
             if(mutationChance < r.nextDouble()){
                 node.setQ((r.nextDouble() * 2f - 1f) * mutationRatio + node.getQ());
             }
@@ -111,7 +137,7 @@ public class ChaoticCyclicGenome extends AbstractGenome {
 
     @Override
     public AbstractGenome copy() {
-        return new ChaoticCyclicGenome(super.getHiddenNodes(), super.getConnections(), super.getInputNodes(), super.getOutputNodes());
+        return new ChaoticCyclicGenome(super.getNodes(), super.getConnections());
     }
 
 }
