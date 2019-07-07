@@ -1,5 +1,7 @@
 package algorithm.genome;
 
+import java.util.*;
+
 public class OrderedGenome extends AbstractGenome {
 
     /*
@@ -12,17 +14,17 @@ public class OrderedGenome extends AbstractGenome {
     int hiddenNodes;
     int hiddenLayers;
 
-    public OrderedGenome(Node[] InputNodes, int hiddenNodes, Node[] OutputNodes, int hiddenLayers) {
-        super(InputNodes, OutputNodes);
+    public OrderedGenome(Map<Integer, Node> InputNodes, int hiddenNodes, int hiddenLayers) {
+        super(InputNodes);
         this.hiddenNodes = hiddenNodes;
         this.hiddenLayers = hiddenLayers;
         addHidden(hiddenNodes);
     }
 
     private void addHidden(int hiddenNodes) {
-        int nodeNum = this.getInputNodes().length + this.getOutputNodes().length;
+        int nodeNum = this.getNodes().size();
         for (int i = nodeNum; i <= nodeNum + hiddenLayers * hiddenNodes - 1; i++) {
-            getHiddenNodes().add(new Node(1, i, NodeType.HIDDEN));
+            getNodes().put(i,new Node(0, NodeType.HIDDEN, 1));
         }
     }
 
@@ -32,7 +34,7 @@ public class OrderedGenome extends AbstractGenome {
     }
 
     @Override
-    public Genome copy() {
+    public AbstractGenome copy() {
         return null;
     }
 }

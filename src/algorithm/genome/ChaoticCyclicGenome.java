@@ -126,12 +126,46 @@ public class ChaoticCyclicGenome extends AbstractGenome {
         }
     }
 
+    public static ChaoticCyclicGenome crossover(ChaoticCyclicGenome parent1, ChaoticCyclicGenome parent2, Random r){
+        List<Connection> childConnections = parent1.getConnections();
+        for(Connection connection: parent2.getConnections()){
+            if(childConnections.contains(connection)){
+                if(r.nextDouble() > 0.5){
+                    childConnections.remove(connection);
+                    childConnections.add(connection);
+                }
+            }
+            else{
+                childConnections.add(connection);
+            }
+        }
+        Map<Integer, Node> childNodes = parent1.getNodes();
+        for(int i: parent2.getNodes().keySet()){
+            if(childNodes.containsKey(i)){
+                if(r.nextDouble() > 0.5){
+                    childNodes.replace(i, parent2.getNodes().get(i));
+                }
+            }
+            else{
+                childNodes.put(i, parent2.getNodes().get(i));
+            }
+        }
+        return new ChaoticCyclicGenome(childNodes, childConnections);
+    }
+
     //count function is used to find out the number this Genome produces at certain point of time
 
     @Override
     public void count() {
+        helperMap.clear();
+        for(int i: helperMap.keySet()){
+            helperMap.put(i, 0.0);
+        }
         for(Connection connection: super.getConnections()){
-
+            helperMap.put(connection.getOutputNodeID(), super.getNodes().get(connection.getInputNodeID()).getValue() * connection.getWeight() + helperMap.get(connection.getOutputNodeID()));
+        }
+        for(int i: helperMap.keySet()){
+            super.getNodes().get(i).setValue(helperMap.get(i));
         }
     }
 
