@@ -139,5 +139,4 @@ public class ChaoticCyclicGenome extends AbstractGenome {
     public AbstractGenome copy() {
         return new ChaoticCyclicGenome(super.getNodes(), super.getConnections());
     }
-
 }
