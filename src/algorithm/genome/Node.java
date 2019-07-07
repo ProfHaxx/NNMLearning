@@ -53,4 +53,20 @@ public class Node{
         }
         return ntype + ", Q number: " + this.Q + " , Value = " + this.value;
     }
+
+    public String toStringSmall() {
+        String ntype = "";
+        switch(this.type) {
+            case INPUT:
+                ntype = "I";
+                break;
+            case HIDDEN:
+                ntype = "H";
+                break;
+            case OUTPUT:
+                ntype = "O";
+                break;
+        }
+        return ntype + " " + this.Q + " " + this.value;
+    }
 }

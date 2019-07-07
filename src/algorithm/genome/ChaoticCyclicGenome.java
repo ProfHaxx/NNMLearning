@@ -1,5 +1,9 @@
 package algorithm.genome;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.*;
 
 public class ChaoticCyclicGenome extends AbstractGenome {
@@ -172,5 +176,40 @@ public class ChaoticCyclicGenome extends AbstractGenome {
     @Override
     public AbstractGenome copy() {
         return new ChaoticCyclicGenome(super.getNodes(), super.getConnections());
+    }
+
+    public static ChaoticCyclicGenome read(String name) {
+        Map<Integer, Node> nodeMap = new HashMap<>();
+        List<Connection> connections = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader("./savedGenomes/files/" + name))) {
+            int roof = Integer.parseInt(reader.readLine());
+            for (int i = 0; i < roof; i++) {
+                String line2 = reader.readLine();
+                String[] allInfo = line2.split(" ");
+                connections.add(new Connection(Double.parseDouble(allInfo[2]), Integer.parseInt(allInfo[0]), Integer.parseInt(allInfo[1])));
+            }
+            roof = Integer.parseInt(reader.readLine());
+            for (int i = 0; i < roof; i++) {
+                String line2 = reader.readLine();
+                String[] allInfo = line2.split(" ");
+                NodeType nodeType = NodeType.HIDDEN;
+                switch (allInfo[0].charAt(0)) {
+                    case 'O':
+                        nodeType = NodeType.OUTPUT;
+                        break;
+                    case 'I':
+                        nodeType = NodeType.INPUT;
+                        break;
+                }
+                nodeMap.put(i, new Node(Double.parseDouble(allInfo[2]), nodeType, Double.parseDouble(allInfo[1])));
+            }
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return new ChaoticCyclicGenome(nodeMap, connections);
     }
 }

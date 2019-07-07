@@ -21,7 +21,11 @@ public class Main {
         connections.add(new Connection(1,1,3));
         connections.add(new Connection(1,2,3));
         ChaoticCyclicGenome chaoticCyclicGenome = new ChaoticCyclicGenome(nodeMap, connections);
-        chaoticCyclicGenome.save("Test.txt");
-        Timer.addEvent("Test Genome saved");
+        chaoticCyclicGenome.save("Test_1.txt");
+        Timer.addEvent("Test_1 Genome saved");
+        ChaoticCyclicGenome c2 = ChaoticCyclicGenome.read("Test.txt");
+        Timer.addEvent("Test_1 Genome downloaded");
+        c2.save("Test_2.txt");
+        Timer.addEvent("Test_2 Genome saved");
     }
 }

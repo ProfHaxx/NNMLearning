@@ -64,16 +64,18 @@ public abstract class AbstractGenome {
             File file = new File("./savedGenomes/files/" + name);
             OutputStream outputStream = new FileOutputStream("./savedGenomes/files/" + name);
             String lineSeparator = System.getProperty("line.separator");
-            outputStream.write("Connections: ".getBytes());
+            //outputStream.write("Connections: ".getBytes());
+            outputStream.write(Long.toString(connections.size()).getBytes());
             outputStream.write(lineSeparator.getBytes());
             for(Connection connection: connections){
-                outputStream.write(connection.toString().getBytes());
+                outputStream.write(connection.toStringSmall().getBytes());
                 outputStream.write(lineSeparator.getBytes());
             }
-            outputStream.write("Nodes: ".getBytes());
+            //outputStream.write("Nodes: ".getBytes());
+            outputStream.write(Long.toString(Nodes.size()).getBytes());
             outputStream.write(lineSeparator.getBytes());
             for(Node node: Nodes.values()){
-                outputStream.write(node.toString().getBytes());
+                outputStream.write(node.toStringSmall().getBytes());
                 outputStream.write(lineSeparator.getBytes());
             }
         }

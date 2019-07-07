@@ -35,6 +35,10 @@ public class Connection{
         return "InputNodeID: " + InputNodeID + "  OutputNodeID: " + OutputNodeID + "  Weight: " + weight;
     }
 
+    public String toStringSmall() {
+        return InputNodeID + " " + OutputNodeID + " " + weight;
+    }
+
     @Override
     public boolean equals(Object obj) {
         return ((((Connection) obj).getOutputNodeID() == this.getOutputNodeID()) &&
