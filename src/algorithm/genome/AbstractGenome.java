@@ -1,5 +1,6 @@
 package algorithm.genome;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.*;
@@ -56,6 +57,29 @@ public abstract class AbstractGenome {
             sb.append(connection.toString());
         }
         return sb.toString();
+    }
+
+    public void save(String name){
+        try {
+            File file = new File("./savedGenomes/files/" + name);
+            OutputStream outputStream = new FileOutputStream("./savedGenomes/files/" + name);
+            String lineSeparator = System.getProperty("line.separator");
+            outputStream.write("Connections: ".getBytes());
+            outputStream.write(lineSeparator.getBytes());
+            for(Connection connection: connections){
+                outputStream.write(connection.toString().getBytes());
+                outputStream.write(lineSeparator.getBytes());
+            }
+            outputStream.write("Nodes: ".getBytes());
+            outputStream.write(lineSeparator.getBytes());
+            for(Node node: Nodes.values()){
+                outputStream.write(node.toString().getBytes());
+                outputStream.write(lineSeparator.getBytes());
+            }
+        }
+        catch (IOException ioe){
+            System.out.print("fail");
+        }
     }
 }
 
