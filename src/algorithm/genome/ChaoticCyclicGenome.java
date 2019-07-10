@@ -10,7 +10,6 @@ public class ChaoticCyclicGenome extends AbstractGenome {
 
     public static final ConnectionComparator connectionComparator = new ConnectionComparator();
     //helperMap is used in order to save the next step values
-    public Map<Integer, Double> helperMap = new HashMap<>();
 
     //both constructors
     //the second one may be not used at all and only will be useful in recreating the save Genome
@@ -161,10 +160,7 @@ public class ChaoticCyclicGenome extends AbstractGenome {
 
     @Override
     public void count() {
-        helperMap.clear();
-        for(int i: helperMap.keySet()){
-            helperMap.put(i, 0.0);
-        }
+        Map<Integer, Double> helperMap = new HashMap<>();
         for(Connection connection: super.getConnections()){
             helperMap.put(connection.getOutputNodeID(), super.getNodes().get(connection.getInputNodeID()).getValue() * connection.getWeight() + helperMap.get(connection.getOutputNodeID()));
         }
@@ -204,10 +200,8 @@ public class ChaoticCyclicGenome extends AbstractGenome {
                 nodeMap.put(i, new Node(Double.parseDouble(allInfo[2]), nodeType, Double.parseDouble(allInfo[1])));
             }
         } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return new ChaoticCyclicGenome(nodeMap, connections);
