@@ -75,7 +75,7 @@ public class ChaoticGenome extends AbstractGenome{
     private static boolean Cyclic(ChaoticCyclicGenome chaoticCyclicGenome, List<Node> usedNodes, int currentNodeID){
         boolean answer = true;
         if(chaoticCyclicGenome.getNodes().get(currentNodeID).getType() == NodeType.HIDDEN ){
-
+            // Hi
         }
         return answer;
     }
