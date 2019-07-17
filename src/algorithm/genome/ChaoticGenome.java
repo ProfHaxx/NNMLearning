@@ -1,5 +1,9 @@
 package algorithm.genome;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -7,8 +11,6 @@ public class ChaoticGenome extends AbstractGenome{
 
     public ChaoticGenome(Map<Integer, Node> Nodes, List<Connection> connections){
         super(Nodes, connections);
-        for(Connection con: connections){
-        }
     }
 
     private void addHiddenNodes(Node... newHiddenNodes){
@@ -19,11 +21,9 @@ public class ChaoticGenome extends AbstractGenome{
 
     private void addConnections(Connection... newConnections){
         super.getConnections().addAll(Arrays.asList(newConnections));
-        for(Connection con: newConnections){
-        }
     }
 
-    public void nodeWeightMutation(double mutationChance, double mutationRatio, Random r){
+    public void nodeQMutation(double mutationChance, double mutationRatio, Random r){
         for(Node node: super.getNodes().values()){
             if(mutationChance < r.nextDouble()){
                 node.setQ((r.nextDouble() * 2f - 1f) * mutationRatio + node.getQ());
@@ -151,5 +151,38 @@ public class ChaoticGenome extends AbstractGenome{
     @Override
     public ChaoticGenome copy() {
         return new ChaoticGenome(this.getNodes(), this.getConnections());
+    }
+
+    public static ChaoticGenome read(String name) {
+        Map<Integer, Node> nodeMap = new HashMap<>();
+        List<Connection> connections = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader("./savedGenomes/files/" + name))) {
+            int roof = Integer.parseInt(reader.readLine());
+            for (int i = 0; i < roof; i++) {
+                String line2 = reader.readLine();
+                String[] allInfo = line2.split(" ");
+                connections.add(new Connection(Double.parseDouble(allInfo[2]), Integer.parseInt(allInfo[0]), Integer.parseInt(allInfo[1])));
+            }
+            roof = Integer.parseInt(reader.readLine());
+            for (int i = 0; i < roof; i++) {
+                String line2 = reader.readLine();
+                String[] allInfo = line2.split(" ");
+                NodeType nodeType = NodeType.HIDDEN;
+                switch (allInfo[0].charAt(0)) {
+                    case 'O':
+                        nodeType = NodeType.OUTPUT;
+                        break;
+                    case 'I':
+                        nodeType = NodeType.INPUT;
+                        break;
+                }
+                nodeMap.put(i, new Node(Double.parseDouble(allInfo[2]), nodeType, Double.parseDouble(allInfo[1])));
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new ChaoticGenome(nodeMap, connections);
     }
 }
