@@ -1,11 +1,14 @@
 package algorithm.genome;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 public class ChaoticGenome extends AbstractGenome{
 
     public ChaoticGenome(Map<Integer, Node> Nodes, List<Connection> connections){
         super(Nodes, connections);
+        for(Connection con: connections){
+        }
     }
 
     private void addHiddenNodes(Node... newHiddenNodes){
@@ -16,6 +19,24 @@ public class ChaoticGenome extends AbstractGenome{
 
     private void addConnections(Connection... newConnections){
         super.getConnections().addAll(Arrays.asList(newConnections));
+        for(Connection con: newConnections){
+        }
+    }
+
+    public void nodeWeightMutation(double mutationChance, double mutationRatio, Random r){
+        for(Node node: super.getNodes().values()){
+            if(mutationChance < r.nextDouble()){
+                node.setQ((r.nextDouble() * 2f - 1f) * mutationRatio + node.getQ());
+            }
+        }
+    }
+
+    public void ConnectionWeightMutation(double mutationChance, double mutationRatio, Random r){
+        for(Connection connection: super.getConnections()){
+            if(mutationChance < r.nextDouble()){
+                connection.setWeight((r.nextDouble() * 2f - 1f) * mutationRatio + connection.getWeight());
+            }
+        }
     }
 
     public void addNodeMutation(Random r){
@@ -61,7 +82,8 @@ public class ChaoticGenome extends AbstractGenome{
             ChaoticGenome newChaotic = this.copy();
             newChaotic.addConnections(new Connection(1, inputID,outputID));
             if(ChaoticGenome.Cyclic(newChaotic, new ArrayList<>(), inputID)){
-                this.addConnections(new Connection(1, inputID,outputID));
+                Connection newConnection = new Connection(1, inputID,outputID);
+                this.addConnections(newConnection);
                 return;
             }
         }
@@ -97,11 +119,37 @@ public class ChaoticGenome extends AbstractGenome{
 
     @Override
     public void count() {
+        Map<Integer,BigDecimal> allCountedNodes = new HashMap<>();
+        for(Integer i: super.getNodes().keySet()){
+            if(super.getNodes().get(i).getType() == NodeType.OUTPUT){
+                insideCount(i, allCountedNodes);
+            }
+        }
+    }
 
+    private BigDecimal insideCount(int currentNodeID, Map<Integer,BigDecimal> allCountedNodes){
+        if(super.getNodes().get(currentNodeID).getType() == NodeType.INPUT){
+            return new BigDecimal(super.getNodes().get(currentNodeID).getValue());
+        }else{
+            BigDecimal answer = new BigDecimal(0);
+            for(Connection con: super.getConnections()){
+                if(con.getOutputNodeID() == currentNodeID){
+                    if(allCountedNodes.containsKey(con.getInputNodeID())){
+                        answer.add(allCountedNodes.get(con.getInputNodeID()));
+                    }else {
+                        BigDecimal entry = insideCount(con.getInputNodeID(), allCountedNodes).multiply(new BigDecimal(con.getWeight()));
+                        answer.add(entry);
+                        allCountedNodes.put(con.getInputNodeID(), entry);
+                    }
+                }
+            }
+            answer.add(new BigDecimal(super.getNodes().get(currentNodeID).getQ()));
+            return answer;
+        }
     }
 
     @Override
     public ChaoticGenome copy() {
-        return null;
+        return new ChaoticGenome(this.getNodes(), this.getConnections());
     }
 }
