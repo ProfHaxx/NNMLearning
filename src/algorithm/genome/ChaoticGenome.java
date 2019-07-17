@@ -28,6 +28,16 @@ public class ChaoticGenome extends AbstractGenome{
         super.getConnections().add(new Connection(c.getWeight(),newNodeID,c.getOutputNodeID()));
     }
 
+    @Override
+    public Map<Integer, Node> getNodes() {
+        return super.getNodes();
+    }
+
+    @Override
+    public List<Connection> getConnections() {
+        return super.getConnections();
+    }
+
     public void addConnectionMutation(Random r, int tryes){
         List<Node> inputNodes = new ArrayList<>(), outputNodes = new ArrayList<>();
         int inputCounter = 0, outputCounter = 0;
@@ -64,7 +74,10 @@ public class ChaoticGenome extends AbstractGenome{
 
     private static boolean Cyclic(ChaoticCyclicGenome chaoticCyclicGenome, List<Node> usedNodes, int currentNodeID){
         boolean answer = true;
-        return true;
+        if(chaoticCyclicGenome.getNodes().get(currentNodeID).getType() == NodeType.HIDDEN ){
+
+        }
+        return answer;
     }
 
     @Override
