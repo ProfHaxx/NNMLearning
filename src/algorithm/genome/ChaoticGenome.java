@@ -64,6 +64,7 @@ public class ChaoticGenome extends AbstractGenome{
 
     private static boolean Cyclic(ChaoticCyclicGenome chaoticCyclicGenome, List<Node> usedNodes, int currentNodeID){
         boolean answer = true;
+        return true;
     }
 
     @Override
