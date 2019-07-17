@@ -28,16 +28,6 @@ public class ChaoticGenome extends AbstractGenome{
         super.getConnections().add(new Connection(c.getWeight(),newNodeID,c.getOutputNodeID()));
     }
 
-    @Override
-    public Map<Integer, Node> getNodes() {
-        return super.getNodes();
-    }
-
-    @Override
-    public List<Connection> getConnections() {
-        return super.getConnections();
-    }
-
     public void addConnectionMutation(Random r, int tryes){
         List<Node> inputNodes = new ArrayList<>(), outputNodes = new ArrayList<>();
         int inputCounter = 0, outputCounter = 0;
@@ -68,16 +58,41 @@ public class ChaoticGenome extends AbstractGenome{
             if(inputID == outputID){
                 continue;
             }
-
+            ChaoticGenome newChaotic = this.copy();
+            newChaotic.addConnections(new Connection(1, inputID,outputID));
+            if(ChaoticGenome.Cyclic(newChaotic, new ArrayList<>(), inputID)){
+                this.addConnections(new Connection(1, inputID,outputID));
+                return;
+            }
         }
+
+        System.out.println("No Connection established");
     }
 
-    private static boolean Cyclic(ChaoticCyclicGenome chaoticCyclicGenome, List<Node> usedNodes, int currentNodeID){
-        boolean answer = true;
-        if(chaoticCyclicGenome.getNodes().get(currentNodeID).getType() == NodeType.HIDDEN ){
-            // Hi
+    private static boolean Cyclic(ChaoticGenome chaoticCyclicGenome, List<Node> usedNodes, int currentNodeID){
+        usedNodes.add(chaoticCyclicGenome.getNodes().get(currentNodeID));
+        if(chaoticCyclicGenome.getNodes().get(currentNodeID).getType() != NodeType.OUTPUT ){
+            for(Connection con: chaoticCyclicGenome.getConnections()){
+                if(con.getInputNodeID() == currentNodeID){
+                    if(!usedNodes.contains(chaoticCyclicGenome.getNodes().get(con.getOutputNodeID()))){
+                        if(!Cyclic(chaoticCyclicGenome, usedNodes, con.getOutputNodeID())){
+                            return false;
+                        }
+                    }
+                }
+            }
         }
-        return answer;
+        return true;
+    }
+
+    @Override
+    public Map<Integer, Node> getNodes() {
+        return super.getNodes();
+    }
+
+    @Override
+    public List<Connection> getConnections() {
+        return super.getConnections();
     }
 
     @Override
@@ -86,7 +101,7 @@ public class ChaoticGenome extends AbstractGenome{
     }
 
     @Override
-    public AbstractGenome copy() {
+    public ChaoticGenome copy() {
         return null;
     }
 }
