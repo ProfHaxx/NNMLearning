@@ -1,7 +1,7 @@
 # NNMLearning
 ## Description
-***
 Interesting Machine Learning Project
+***
 ## Installation and Setup Guide
 1. Create a new Folder (called "NNMLearning")
 2. Navigate your Command Line or Terminal into the folder which contains the folder NNMLearning.
