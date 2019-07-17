@@ -29,7 +29,6 @@ public class ChaoticGenome extends AbstractGenome{
     }
 
     public void addConnectionMutation(Random r){
-        List<>
     }
 
     @Override
