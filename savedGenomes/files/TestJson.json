@@ -1,0 +1,72 @@
+{
+    "NodeGenes": [
+        {
+           "NodeType": "INPUT" ,
+           "NodeID": 0 ,
+           "QNumber": 0.0 ,
+           "inputs": [
+               {
+                   "ID": 0 ,
+                   "weight": 1.0
+               }
+           ],
+           "outputs": [
+           ]
+        },
+        {
+           "NodeType": "INPUT" ,
+           "NodeID": 1 ,
+           "QNumber": 2.0 ,
+           "inputs": [
+               {
+                   "ID": 1 ,
+                   "weight": 1.0
+               },
+               {
+                   "ID": 2 ,
+                   "weight": 1.0
+               }
+           ],
+           "outputs": [
+           ]
+        },
+        {
+           "NodeType": "OUTPUT" ,
+           "NodeID": 2 ,
+           "QNumber": 1.0 ,
+           "inputs": [
+               {
+                   "ID": 3 ,
+                   "weight": 1.0
+               }
+           ],
+           "outputs": [
+               {
+                   "ID": 0 ,
+                   "weight": 1.0
+               },
+               {
+                   "ID": 1 ,
+                   "weight": 1.0
+               }
+           ]
+        },
+        {
+           "NodeType": "HIDDEN" ,
+           "NodeID": 3 ,
+           "QNumber": 3.0 ,
+           "inputs": [
+           ],
+           "outputs": [
+               {
+                   "ID": 2 ,
+                   "weight": 1.0
+               },
+               {
+                   "ID": 3 ,
+                   "weight": 1.0
+               }
+           ]
+        }
+    ]
+}

@@ -7,8 +7,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class Timer extends JPanel{
-    private Image dbImage;
-    private Graphics dbg;
     private static long startingTime;
     private static Map<Long, String> events;
     private static List<Long> eventsTime = new ArrayList<>();
@@ -16,9 +14,8 @@ public class Timer extends JPanel{
     private static final int yOffset = 7;
 
     public void paint(Graphics g){
-        dbImage = createImage(getWidth(), getHeight());
-        dbg = dbImage.getGraphics();
-        paintOneScene(dbg);
+        Image dbImage = createImage(getWidth(), getHeight());
+        paintOneScene(dbImage.getGraphics());
         g.drawImage(dbImage, 0, 0, this);
         repaint(100);
     }

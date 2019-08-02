@@ -21,11 +21,13 @@ public class Main {
         connections.add(new Connection(1,1,3));
         connections.add(new Connection(1,2,3));
         ChaoticCyclicGenome chaoticCyclicGenome = new ChaoticCyclicGenome(nodeMap, connections);
-        chaoticCyclicGenome.save("Test_1.txt");
+        chaoticCyclicGenome.save("Test_1");
         Timer.addEvent("Test_1 Genome saved");
-        ChaoticCyclicGenome c2 = ChaoticCyclicGenome.read("Test.txt");
+        ChaoticCyclicGenome c2 = ChaoticCyclicGenome.read("Test_1.txt");
         Timer.addEvent("Test_1 Genome downloaded");
-        c2.save("Test_2.txt");
+        c2.save("Test_2");
         Timer.addEvent("Test_2 Genome saved");
+        c2.toJson("TestJson");
+        Timer.addEvent("TestJson Genome saved");
     }
 }
