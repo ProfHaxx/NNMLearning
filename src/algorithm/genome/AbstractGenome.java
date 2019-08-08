@@ -12,6 +12,7 @@ public abstract class AbstractGenome {
     public AbstractGenome(Map<Integer, Node>  Nodes){
         this.connections = new ArrayList<>();
         this.Nodes = new HashMap<>();
+        this.Nodes = Nodes;
     }
 
     public AbstractGenome(Map<Integer, Node> Nodes, List<Connection> connections){
