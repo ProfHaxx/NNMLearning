@@ -38,7 +38,7 @@ public class Genome_comparator {
 
         for(int Integer: nodeSet){
             if(Genome1.getNodes().containsKey(Integer) && Genome2.getNodes().containsKey(Integer)){
-                QDistance += Genome1.getNodes().get(Integer).getQ() - Genome2.getNodes().get(Integer).getQ();
+                QDistance += Math.abs(Genome1.getNodes().get(Integer).getQ() - Genome2.getNodes().get(Integer).getQ());
             }
             else if (Genome1.getNodes().containsKey(Integer)){
                 NodesDifference ++;
@@ -46,7 +46,7 @@ public class Genome_comparator {
             }
             else if (Genome2.getNodes().containsKey(Integer)){
                 NodesDifference ++;
-                QDistance -= Genome2.getNodes().get(Integer).getQ() * overlappingQfactor;
+                QDistance += Genome2.getNodes().get(Integer).getQ() * overlappingQfactor;
             }
         }
 
@@ -61,7 +61,7 @@ public class Genome_comparator {
 
         for(int i = 0; i < Genome1.getConnections().size(); i++){
             if(Genome2.getConnections().contains(Genome1.getConnections().get(i))){
-                weightDistance += Genome1.getConnections().get(i).getWeight() - Genome2.getConnections().get(i).getWeight();
+                weightDistance += Math.abs(Genome1.getConnections().get(i).getWeight() - Genome2.getConnections().get(i).getWeight());
             }
             else{
                 weightDistance += Genome1.getConnections().get(i).getWeight() * overlappingWeightfactor;
@@ -70,7 +70,7 @@ public class Genome_comparator {
         }
         for(int i = 0; i < Genome2.getConnections().size(); i++){
             if(connectionSet.add(Genome2.getConnections().get(i))){
-                weightDistance -= Genome2.getConnections().get(i).getWeight() * overlappingWeightfactor;
+                weightDistance += Genome2.getConnections().get(i).getWeight() * overlappingWeightfactor;
                 ConnectionsDifference ++;
             }
         }
