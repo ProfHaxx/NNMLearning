@@ -2,7 +2,7 @@ package genome.node;
 
 import java.util.HashMap;
 
-class AbstractNode<T> {
+public class AbstractNode<T> {
     private T data;
     HashMap<AbstractNode, Double> connections = new HashMap<>();
 
