@@ -13,6 +13,7 @@ public class Graph {
 
     }
 
+    @SuppressWarnings("unused")
     public Graph(InputNode[] inputNodes, OutputNode[] outputNodes) {
         this.inputNodes = inputNodes;
         this.outputNodes = outputNodes;

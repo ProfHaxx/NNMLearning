@@ -1,13 +1,11 @@
 package visual;
 
 import genome.Graph;
-import genome.node.AbstractNode;
 import genome.node.InputNode;
 import genome.node.OutputNode;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Iterator;
 
 public class GraphVisualizer extends JFrame {
 
@@ -27,9 +25,11 @@ public class GraphVisualizer extends JFrame {
 }
 
 class GraphDrawer extends JPanel {
-    private Graph graph;
-    private int inputs;
-    private int outputs;
+    //To be changed later. Due to variable Graph Structure Changes
+    final private Graph graph;
+    //Can / Should be final
+    final private int inputs;
+    final private int outputs;
 
     GraphDrawer(Graph graph) {
         this.graph = graph;
